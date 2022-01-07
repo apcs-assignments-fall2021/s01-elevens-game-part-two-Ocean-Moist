@@ -9,11 +9,11 @@ public class ElevensBoard extends Board {
 
     // These three arrays will be used in the constructor:
     // The ranks of the cards for this game to be sent to the deck
-    private static final String[] RANKS = { "ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king" };
+    private static final String[] RANKS = {"ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"};
     // The suits of the cards for this game to be sent to the deck.
-    private static final String[] SUITS = { "spades", "hearts", "diamonds", "clubs" };
+    private static final String[] SUITS = {"spades", "hearts", "diamonds", "clubs"};
     // The values of the cards for this game to be sent to the deck.
-    private static final int[] POINT_VALUES = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0 };
+    private static final int[] POINT_VALUES = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0};
 
     // Creates a new ElevensBoard instance with a standard 52 card deck
     public ElevensBoard() {
@@ -25,6 +25,13 @@ public class ElevensBoard extends Board {
     // and false otherwise
     public boolean containsPairSum11(ArrayList<Integer> cardIndexes) {
         // YOUR CODE HERE
+        for (int i = 0; i < cardIndexes.size(); i++) {
+            for (int j = i + 1; j < cardIndexes.size(); j++) {
+                if (cardAt(cardIndexes.get(i)).getPointValue() + cardAt((cardIndexes.get(j))).getPointValue() == 11) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -33,7 +40,21 @@ public class ElevensBoard extends Board {
     // amongst the selected cards, and false otherwise
     public boolean containsJQK(ArrayList<Integer> cardIndexes) {
         // YOUR CODE HERE
-        return false;
+        int j = 0;
+        int q = 0;
+        int k = 0;
+
+        for (Integer cardIndex : cardIndexes) {
+            if (cardAt(cardIndex).getRank().equals("jack")) {
+                j++;
+            } else if (cardAt(cardIndex).getRank().equals("queen")) {
+                q++;
+            } else if (cardAt(cardIndex).getRank().equals("king")) {
+                k++;
+            }
+        }
+
+        return j > 0 && q > 0 && k > 0;
     }
 
     // Determine if there are any legal plays left on the board.
@@ -47,7 +68,7 @@ public class ElevensBoard extends Board {
 
         // YOUR CODE HERE
         // Just 1-2 lines of code needed
-        return false;
+        return containsPairSum11(allCards) || containsJQK(allCards);
     }
 
     // Determines if the selected cards form a valid group for removal. In Elevens,
@@ -56,6 +77,6 @@ public class ElevensBoard extends Board {
     @Override
     public boolean isLegal(ArrayList<Integer> selectedCards) {
         // YOUR CODE HERE
-        return false;
+        return containsPairSum11(selectedCards) && selectedCards.size() == 2 || containsJQK(selectedCards) && selectedCards.size() == 3;
     }
 }
